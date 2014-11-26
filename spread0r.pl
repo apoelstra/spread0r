@@ -40,6 +40,7 @@ my $gtk_sentence_text;
 my $gtk_timer;
 
 # global variables
+my $n_displayed_words = 3;
 my $wpm = 200;
 my $pause_button;
 my $pause = 1;
@@ -203,22 +204,26 @@ sub button_faster
 
 sub set_text
 {
-	my $word = get_next_word();
-	my $timeout = 60000 / $wpm;
-	my $next_shot = $timeout;
-	my $word_length = length($word);
+	my $word = "";
+	my $word_length = 0;
 	my $word_start = "";
 	my $word_mid = "";
 	my $word_end = "";
 	my $prev_vowel = -1;
-	my $i = 0;
 	my $add_to_end = 0;
+	my $timeout = $n_displayed_words * 60000 / $wpm;
+	my $next_shot = $timeout;
+	my $i = 0;
 
+	for ($i = 0; $i < $n_displayed_words; ++$i) {
+		$word .= " " . get_next_word();
 	
-	# calculate timeout for next run
-	$next_shot += ($timeout / 5 ) * ($word_length - 6) if ($word_length > 6);
-	$next_shot += $timeout / 2 if ($word =~ /.*,$/);
-	$next_shot += $timeout * 1.5 if ($word =~ /.*[\.!\?;]«?$/);
+		# calculate timeout for next run
+		$next_shot += ($timeout / 5 ) * ($word_length - 6) if ($word_length > 6);
+		$next_shot += $timeout / 2 if ($word =~ /.*,$/);
+		$next_shot += $timeout * 1.5 if ($word =~ /.*[\.!\?;]«?$/);
+	}
+	my $word_length = length($word);
 
 	# search for vowel from start to the mid of the word,
 	# this will be the focuspoint of the word
