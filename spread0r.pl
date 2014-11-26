@@ -193,7 +193,7 @@ sub button_slower
 
 sub button_faster
 {
-	$wpm += 10 if($wpm < 1000);
+	$wpm += 10 if($wpm < 10000);
 	$gtk_speed_label->set_markup("WPM: $wpm");
 	return TRUE;
 }
@@ -319,7 +319,7 @@ sub main
 
 	# limit wpm
 	$wpm = 40 if ($wpm < 40);
-	$wpm = 1000 if ($wpm > 1000);
+	$wpm = 10000 if ($wpm > 10000);
 
 	# open file
 	printf("opening file: $file\n");
